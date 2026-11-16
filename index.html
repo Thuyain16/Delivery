@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thipaw Delivery</title>
+    <!-- PWA Meta Tags -->
+    <meta name="description" content="သီပေါမြို့တွင်း အစားအသောက်နှင့် ပါဆယ်ပို့ဆောင်ရေး ဝန်ဆောင်မှု">
+    <meta name="theme-color" content="#FF5722">
+    <link rel="manifest" href="./manifest.json">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FF5722',
+                        darkOrange: '#E64A19',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans min-h-screen pb-20">
+
+    <!-- Header -->
+    <header class="bg-primary text-white p-4 shadow-md sticky top-0 z-50 flex justify-between items-center">
+        <div class="flex items-center space-x-2">
+            <span class="text-2xl font-bold">🚚 Thipaw Delivery</span>
+        </div>
+        <div class="text-sm bg-darkOrange px-3 py-1 rounded-full">သီပေါမြို့</div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="p-4 max-w-md mx-auto">
+
+        <!-- Tabs Navigation -->
+        <div class="flex justify-around bg-white p-2 rounded-xl shadow-sm mb-4 border border-gray-100">
+            <button onclick="switchTab('food')" id="tab-food" class="flex-1 py-2 text-center font-semibold text-primary border-b-2 border-primary">🍲 အစားအသောက်</button>
+            <button onclick="switchTab('taxi')" id="tab-taxi" class="flex-1 py-2 text-center font-semibold text-gray-500">🏍️ ကယ်ရီ</button>
+            <button onclick="switchTab('shops')" id="tab-shops" class="flex-1 py-2 text-center font-semibold text-gray-500">🏪 ဆိုင်များ</button>
+            <button onclick="switchTab('admin')" id="tab-admin" class="flex-1 py-2 text-center font-semibold text-gray-500">⚙️ အက်ဒမင်</button>
+        </div>
+
+        <!-- 1. Food Tab -->
+        <div id="section-food" class="space-y-4">
+            <div class="bg-orange-50 border border-orange-200 p-4 rounded-xl">
+                <h2 class="font-bold text-primary text-lg mb-1">🔥 လူကြိုက်များသော မီနူးများ</h2>
+                <p class="text-sm text-gray-600 mb-3">သီပေါမြို့တွင်း နာမည်ကြီး ဆိုင်များမှ မှာယူနိုင်ပါသည်။</p>
+                <div id="food-list" class="space-y-3">
+                    <!-- Dynamic Food Items -->
+                    <div class="bg-white p-3 rounded-lg shadow-sm flex justify-between items-center">
+                        <div>
+                            <h3 class="font-bold">ရှမ်းခေါက်ဆွဲထုပ် (အထူး)</h3>
+                            <p class="text-xs text-gray-500">ဆိုင် - ရွှေဆိုင် (သီပေါ)</p>
+                            <span class="text-primary font-bold text-sm">၃,၅၀ ရပ်ကျပ်</span>
+                        </div>
+                        <button onclick="orderItem('ရှမ်းခေါက်ဆွဲ')" class="bg-primary text-white px-3 py-1.5 rounded-lg text-sm font-medium">မှာမည်</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Taxi Tab -->
+        <div id="section-taxi" class="space-y-4 hidden">
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 space-y-4">
+                <h2 class="font-bold text-primary text-lg">🏍️ ဆိုင်ကယ်ကယ်ရီ ငှားရမ်းရန်</h2>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">လက်ရှိနေရာ (ဘယ်ကနေလဲ)</label>
+                    <input type="text" id="pickup" placeholder="ဥပမာ - မြို့မဈေးရှေ့" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-primary focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">သွားမည့်နေရာ (ဘယ်ကိုလဲ)</label>
+                    <input type="text" id="destination" placeholder="ဥပမာ - ဘော်ကြိုဘုရား" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-primary focus:outline-none">
+                </div>
+                <button onclick="bookTaxi()" class="w-full bg-primary text-white py-3 rounded-lg font-bold shadow-md hover:bg-darkOrange transition">ကယ်ရီခေါ်မည်</button>
+            </div>
+        </div>
+
+        <!-- 3. Shops Tab -->
+        <div id="section-shops" class="space-y-4 hidden">
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                <div class="flex justify-between items-center mb-3">
+                    <h2 class="font-bold text-primary text-lg">🏪 ဆိုင်ချန်နယ်များ</h2>
+                    <button onclick="openShopOwnerLogin()" class="text-xs bg-gray-100 px-3 py-1.5 rounded-lg font-medium text-primary border border-primary">ဆိုင်ရှင်ဝင်ရန် (PIN: 8888)</button>
+                </div>
+                <div id="shops-container" class="space-y-3">
+                    <!-- Shop list rendered here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. Admin Tab -->
+        <div id="section-admin" class="space-y-4 hidden">
+            <div id="admin-login-box" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 text-center space-y-3">
+                <h2 class="font-bold text-primary text-lg">⚙️ အက်ဒမင် လော့ဂ်အင်</h2>
+                <p class="text-sm text-gray-500">စနစ်ကို ထိန်းချုပ်ရန် PIN ရိုက်ထည့်ပါ (PIN: 1234)</p>
+                <input type="password" id="admin-pin" placeholder="PIN နံပါတ် (1234)" class="w-full p-3 border rounded-lg text-center tracking-widest text-lg focus:outline-none">
+                <button onclick="verifyAdmin()" class="w-full bg-primary text-white py-3 rounded-lg font-bold">ဝင်မည်</button>
+            </div>
+            <div id="admin-dashboard" class="hidden space-y-4">
+                <div class="bg-white p-4 rounded-xl shadow-sm border">
+                    <h2 class="font-bold text-primary text-lg mb-2">📊 အက်ဒမင် ထိန်းချုပ်ရန်</h2>
+                    <p class="text-sm text-gray-600 mb-3">မှာယူမှုများနှင့် ဆိုင်များကို စီမံခန့်ခွဲပါ။</p>
+                    <button onclick="alert('အချက်အလက်များ အားလုံး ပုံမှန်ရှိသည်။')" class="w-full bg-green-600 text-white py-2 rounded-lg font-medium">အခြေအနေ စစ်ဆေးရန်</button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- JavaScript Logic -->
+    <script>
+        function switchTab(tab) {
+            ['food', 'taxi', 'shops', 'admin'].forEach(t => {
+                document.getElementById('section-' + t).classList.add('hidden');
+                document.getElementById('tab-' + t).className = 'flex-1 py-2 text-center font-semibold text-gray-500 border-b-2 border-transparent';
+            });
+            document.getElementById('section-' + tab).classList.remove('hidden');
+            document.getElementById('tab-' + tab).className = 'flex-1 py-2 text-center font-semibold text-primary border-b-2 border-primary';
+        }
+
+        function orderItem(item) {
+            alert(item + ' ကို အောင်မြင်စွာ မှာယူပြီးပါပြီ! ဆိုင်မှ ဆက်သွယ်ပါမည်။');
+        }
+
+        function bookTaxi() {
+            const p = document.getElementById('pickup').value;
+            const d = document.getElementById('destination').value;
+            if(!p || !d) {
+                alert('ကျေးဇူးပြု၍ နေရာများကို အပြည့်အစုံ ဖြည့်ပါ။');
+                return;
+            }
+            alert('ကယ်ရီ တောင်းဆိုမှု အောင်မြင်ပါသည်။ နီးစပ်ရာယာဉ်မောင်းကို ချိတ်ဆက်နေပါပြီ။');
+        }
+
+        function verifyAdmin() {
+            const pin = document.getElementById('admin-pin').value;
+            if(pin === '1234') {
+                document.getElementById('admin-login-box').classList.add('hidden');
+                document.getElementById('admin-dashboard').classList.remove('hidden');
+                alert('အက်ဒမင်သို့ အောင်မြင်စွာ ဝင်ရောက်ပြီးပါပြီ။');
+            } else {
+                alert('PIN နံပါတ် မှားယွင်းနေပါသည်။ (PIN: 1234)');
+            }
+        }
+
+        function openShopOwnerLogin() {
+            const pin = prompt('ဆိုင်ရှင် PIN နံပါတ် ထည့်ပါ (PIN: 8888):');
+            if(pin === '8888') {
+                alert('ဆိုင်ရှင်မုဒ်သို့ ဝင်ရောက်ပြီးပါပြီ။ မီနူးအသစ် ထည့်သွင်းနိုင်ပါပြီ။');
+            } else if(pin !== null) {
+                alert('PIN နံပါတ် မှားယွင်းနေပါသည်။');
+            }
+        }
+
+        // Register Service Worker for PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('Service Worker Registered'))
+                    .catch(err => console.log('Service Worker Failed', err));
+            });
+        }
+    </script>
+</body>
+</html>
